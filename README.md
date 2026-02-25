@@ -1,6 +1,6 @@
 # ⚙️ Classic Carb & EFI Safety ECU (Egypt-Sourced Components)
 
-[![MCU](https://img.shields.io/badge/MCU-STM32F103-blue)](#-mcu-variants)
+[![MCU](https://img.shields.io/badge/MCU-STM32%20%7C%20RP2040-blue)](#-mcu-variants)
 [![Status](https://img.shields.io/badge/status-early%20development-orange)](#-project-status)
 [![License](https://img.shields.io/badge/license-open-lightgrey)](#-license)
 
@@ -21,6 +21,7 @@ This project started from a real and dangerous incident: a classic carbureted ca
     - [Chapter 1 – Egypt Market Research](#chapter-1--egypt-market-research)
     - [Chapter 2 – CKS32F103C8T6 ECU Pinout](#chapter-2--cks32f103c8t6-ecu-pinout)
     - [Chapter 2R – STM32F103RCT6 ECU Pinout](#chapter-2r--stm32f103rct6-ecu-pinout)
+    - [Chapter 3 – Raspberry Pi Pico (RP2040) ECU Design](#chapter-3--raspberry-pi-pico-rp2040-ecu-design)
   - [🛠 Planned Next Chapters](#-planned-next-chapters)
   - [🤝 Acknowledgements](#-acknowledgements)
   - [📦 Project Status](#-project-status)
@@ -72,7 +73,13 @@ This project deliberately supports **two MCU options**, so builders can choose b
     - More relays and actuators
     - More complex firmware and diagnostics
 
-The documentation contains **parallel pinout chapters** for both MCUs so the same project can scale from a compact ECU to a more advanced one.
+- **Raspberry Pi Pico (RP2040)**
+  - Dual-core Cortex-M0+ @ 133MHz
+  - **USB-C / Micro-USB** native support
+  - **Easiest to CNC Mill** (Castellated edges)
+  - Requires CD4051 Multiplexer for analog inputs
+
+The documentation contains **parallel pinout chapters** for all MCUs so the same project can scale from a compact ECU to a more advanced one.
 
 ---
 
@@ -128,6 +135,28 @@ All design documents are kept as Markdown files in the repository for easy readi
     - Oil temperature, oil pressure, fuel or boost pressure
     - Additional relays and actuators
     - Future expansion (VVT, boost control, external modules)
+
+### Chapter 3 – Raspberry Pi Pico (RP2040) ECU Design
+
+- **File**: [`pico_ecu.md`](./pico_ecu.md)
+- **New Third Option!**
+- Focus:
+  - Using the **Raspberry Pi Pico** (RP2040) instead of STM32.
+  - **Key Advantages**:
+    - **USB-C / Micro-USB Native**: Direct connection to TunerStudio (no FTDI needed).
+    - **CNC Friendly**: Castellated edges allow easy surface mounting on home-milled PCBs.
+    - **Faster**: Dual-core 133MHz processor.
+  - **Trade-offs**:
+    - Requires a cheap **CD4051 Multiplexer** for extra analog inputs.
+    - 3.3V logic requires careful level shifting.
+
+### Standard EFI Configuration
+
+- **File**: [`standard_efi.md`](./standard_efi.md)
+- Focus:
+  - **Core Requirements:** Simplified, reliable EFI setup for 4-cylinder engines (like Fiat Regata).
+  - **Universal Pinout:** Defines the essential pins that work on *both* CKS and STM32 MCUs.
+  - **Hardware Specs:** Specific driver and protection components available in Egypt.
 
 ---
 
