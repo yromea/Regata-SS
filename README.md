@@ -83,7 +83,15 @@ The documentation contains **parallel pinout chapters** for all MCUs so the same
 
 ---
 
-## 📄 Documentation Chapters
+## � Shopping List
+
+- **File**: [`shopping_list.md`](./shopping_list.md)
+- **Master List** containing:
+  - **Common Components** (Power, Drivers, Sensors) needed for *any* version.
+  - **Specific Parts** for Blue Pill, Bare Metal, or Pico versions.
+  - **CNC Supplies** for milling your own PCB.
+
+## �📄 Documentation Chapters
 
 All design documents are kept as Markdown files in the repository for easy reading and version control.
 
