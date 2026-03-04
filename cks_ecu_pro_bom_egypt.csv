@@ -1,0 +1,23 @@
+Category,Component,Package,Quantity,Egypt Local Replacement,Local Store Note,Fritzing Base Part
+Brain,CKS32F103CBT6,LQFP-48,1,STM32F103CBT6 / Blue Pill Board,"If chip not found, desolder from a Blue Pill board",Generic IC (LQFP-48)
+Power,LM2940-5.0,TO-220,1,LM7805,LM7805 is common but LM2940 is better for cars,Voltage Regulator (TO-220)
+Power,AMS1117-3.3,SOT-223,1,LF33CV (TO-220),"If SMD not found, use TO-220 version LF33",Voltage Regulator (SOT-223)
+Power,5KP15A,Axial,1,1.5KE15A / P6KE18A,Standard TVS diodes at Ram/Future,Diode (Zener / TVS)
+Power,1N5408,Axial,1,1N5401 - 1N5407,Any 3A diode will work,Diode (1N4001 style)
+Driver,IRLZ44N,TO-220,5,IRFZ44N + Logic Level Shifter,IRLZ44N is logic level; IRFZ44N needs 10V to gate,N-Channel MOSFET (TO-220)
+Driver,ISL9V5036P3,TO-220,2,BIP373 / IRGB14C40L,Ignition IGBTs; check scrap ECU for 'Ignition Driver',NPN Transistor (TO-220) / IGBT
+Input,MAX9926,QSOP-16,1,LM1815 / NPN Conditioner,Hard to find; use LM1815 or simple NPN circuit,Generic IC (QSOP-16)
+Input,3.3V Zener,Axial,6,BZX55C3V3,Very common 0.5W Zener,Zener Diode
+Input,1k Resistor,0805/THT,10,Any 1/4W 1k resistor,Universal,Resistor
+Input,100nF Cap,0805/THT,10,104 Ceramic Capacitor,Universal,Ceramic Capacitor
+Input,2.49k Resistor,THT,2,2.2k or 2.7k Resistor,Close values work for temp sensors,Resistor
+Comms,HC-05,Module,1,HC-06 / JDY-31,Any SPP Bluetooth module,Bluetooth Module (HC-05)
+Connector,OBD-II Female,Socket,1,Scrap yard cable,Take from any post-2006 scrap car,Pin Header (2x8)
+Connector,ECU Plug,Bosch/Molex,1,Scrap Chevrolet Optra Plug,Cut from Optra/Hyundai scrap harness,Pin Header (2x20 or custom)
+Turbo,Boost Solenoid,Valve,1,VW/Audi N75 Valve,Common in used European car parts stores,Screw Terminal (2-pin)
+Crystal,8.0 MHz,HC-49S,1,8.0 MHz THT Crystal,Very common,Crystal (HC-49S)
+Capacitor,22pF,0805/Ceramic,2,18pF - 33pF Ceramic,Common for crystal loading,Ceramic Capacitor
+Switch,Tactile Button,6x6mm,1,Standard Reset Button,Common,Tactile Switch
+Divider,10k Resistor,0805/THT,5,Any 10k resistor,Universal,Resistor
+Divider,100k Resistor,0805/THT,1,Any 100k resistor,For Battery Sense (10:1),Resistor
+Aux,VNP14N04,TO-220,2,IRF540N + Protection,Standard MOSFET works if you add a flyback diode,N-Channel MOSFET (TO-220)

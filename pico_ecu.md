@@ -32,27 +32,33 @@ The Pico has fewer ADC pins (only 3 user accessible!) compared to STM32, so we m
 ### 1.3 Analog Sensors (The Challenge)
 *Pico only has ADC0, ADC1, ADC2 (GP26, GP27, GP28).*
 We need: TPS, MAP, CLT, IAT, O2, Batt. (6 inputs).
-**Solution:** Use an external **CD4051 Multiplexer** (8-channel) connected to one ADC pin.
-*This is cheap, easy to solder (DIP-16), and widely available in Egypt.*
+**Solution:** Use an external **CD4051 SMD (SOIC-16)** Analog Multiplexer connected to one ADC pin.
 
-**Multiplexer Setup (CD4051):**
-- **Select A:** GP18
-- **Select B:** GP19
-- **Select C:** GP20
-- **Common Output (Z):** **ADC0 (GP26)**
+**Multiplexer Setup (CD4051 SMD):**
+- **Select A (Pin 11):** GP18
+- **Select B (Pin 10):** GP19
+- **Select C (Pin 9):** GP20
+- **Common Output Z (Pin 3):** **ADC0 (GP26)**
+- **VEE (Pin 7):** Connect to GND (for 0-5V signals)
+- **VSS (Pin 8):** Connect to GND
+- **VDD (Pin 16):** Connect to 5V (Allows reading 0-5V sensors)
 - **Inputs (Y0-Y7):**
-  - Y0: **TPS**
-  - Y1: **MAP**
-  - Y2: **CLT**
-  - Y3: **IAT**
-  - Y4: **O2**
-  - Y5: **Battery Voltage**
-  - Y6: Spare (Oil Pressure?)
-  - Y7: Spare (Fuel Level?)
+  - Y0 (Pin 13): **TPS**
+  - Y1 (Pin 14): **MAP**
+  - Y2 (Pin 15): **CLT**
+  - Y3 (Pin 12): **IAT**
+  - Y4 (Pin 1): **O2**
+  - Y5 (Pin 5): **Battery Voltage**
+  - Y6 (Pin 2): Spare
+  - Y7 (Pin 4): Spare
 
-### 1.4 Communication (USB-C & UART)
-- **USB-C:** Native USB! Connect directly to laptop for TunerStudio (fastest speed).
-- **UART0 (GP16/GP17):** Bluetooth Module (HC-05) for wireless dashboard.
+### 1.4 OBD-II & Diagnostic Port
+The ECU will include an **OBD-II Female Connector** for under-dash mounting.
+- **Pin 4 & 5:** Ground
+- **Pin 16:** 12V Battery
+- **Pin 6 (CAN High) & Pin 14 (CAN Low):** Connected to a CAN Transceiver (MCP2551/62) - *Optional for later.*
+- **Pin 7 (K-Line):** For older diagnostic protocols - *Optional.*
+- **Custom Mapping:** We can use the standard OBD-II pins to output UART data to a Bluetooth adapter (HC-05) for mobile apps.
 
 ---
 
@@ -61,22 +67,57 @@ We need: TPS, MAP, CLT, IAT, O2, Batt. (6 inputs).
 ### 2.1 Power Supply (5V -> 3.3V)
 The Pico has an onboard buck-boost regulator (RT6150), but for an automotive ECU, we should feed it clean **5V** into the **VSYS** pin.
 - **Input:** 12V -> LM7805 (as usual).
-- **Output:** 5V -> Pico **VSYS (Pin 39)**.
+- **Output:** 5V -> Pico **VSYS (Pin 39)** and CD4051 **VDD**.
 - **GND:** Pico **GND (Pin 38, etc)**.
 
-### 2.2 Analog Reference
-The Pico's ADC is notoriously noisy if powered via USB.
-- **Fix:** Use a precise **3.0V or 3.3V Shunt Reference (TL431)** or simply filter the **3V3_OUT** pin heavily and use it for sensor pull-ups.
-- **Better Fix:** The CD4051 Multiplexer approach actually helps because you can switch inputs in sync with the noise, or average readings in software.
-
-### 2.3 Logic Levels (3.3V)
-- **MOSFETs:** You MUST use Logic-Level MOSFETs (IRLZ44N) that fully open at 3.3V, or add a gate driver buffer (e.g., 74HC14 or TC4427).
-- **Ignition:** Most smart coils work fine with 3.3V triggers.
-- **VR Sensor:** If using a VR conditioner chip (MAX9926), power it with 5V but ensure the output to Pico is 3.3V logic (pull-up to 3.3V).
+### 2.2 Level Shifting for Multiplexer
+Since the CD4051 is powered by 5V to read 5V sensors, its "Select" pins (A, B, C) might expect 5V logic. However, CD4051 usually accepts 3.3V logic as "High" even when powered at 5V.
+- **Verification:** Check the specific brand datasheet. If needed, add a **74HCT125** or simple NPN level shifter.
 
 ---
 
-## 3. PCB Layout Strategy (CNC 3018)
+## 3. Parts List (BOM) - Pico ECU Version
+
+| Qty | Component | Value/Part | Package | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 | **MCU** | **Raspberry Pi Pico** | Module | RP2040 Dual Core. |
+| 1 | **Multiplexer** | **CD4051** | **SOIC-16 (SMD)** | 8-Channel Analog Mux. |
+| 1 | **Connector** | **OBD-II Female** | Pigtail/Socket | For vehicle diagnostics. |
+| 1 | **Regulator** | **LM7805** | TO-220 | 12V to 5V supply. |
+| 1 | **Diode** | **1N5408** | Axial | Reverse polarity protection. |
+| 1 | **TVS Diode** | **5KP15A** | Axial | Surge protection. |
+| 4 | **MOSFET** | **IRLZ44N** | TO-220 | Logic-level Injector Drivers. |
+| 2 | **Resistor** | **220Ω** | THT | Ignition protection resistors. |
+| 6 | **Resistor** | **1kΩ** | THT | Input protection resistors. |
+| 6 | **Capacitor** | **100nF** | Ceramic | Input filters. |
+| 6 | **Zener** | **3.3V** | Axial | ADC protection. |
+| 2 | **Resistor** | **2.49kΩ** | THT | Temp sensor pull-ups. |
+| 1 | **Screw Terminal** | 2-pin | THT | Power input. |
+| 1 | **Main Connector** | **Molex/Bosch Style** | Connector | Standard ECU Interface (See Chapter 4). |
+
+---
+
+## 4. Standard ECU Connectors
+Is there a "Standard" for ECU connectors? **Yes and No.**
+
+Most DIY and Professional ECUs use one of these three families:
+
+1.  **Bosch 55-Pin (Classic):** Used in millions of BMWs, VWs, and Fiats from the 90s.
+    - *Pros:* Extremely robust, waterproof, easy to find in junk yards.
+    - *Cons:* Large, many pins you might not need.
+2.  **TE Superseal (1.0 or 1.5):** The modern "Standard" for aftermarket ECUs like Haltech or Link.
+    - *Pros:* Fully waterproof, very high quality, available in 26, 34, or 60 pins.
+    - *Cons:* Expensive, requires special crimping tools.
+3.  **Molex CMC / Mini-Fit:** Used in Megasquirt and smaller ECUs.
+    - *Pros:* Cheap, compact.
+    - *Cons:* Not always waterproof (Mini-Fit), harder to hand-crimp than Bosch.
+
+**Recommendation for your Regata project:**
+Use a **DB37 Connector** (like Megasquirt) for the first prototype if it's inside the cabin. If the ECU is in the engine bay, look for a **34-pin TE Superseal** clone or a **used Bosch connector** from a scrap car.
+
+---
+
+## 5. PCB Layout Strategy (CNC 3018)
 
 This is actually the **easiest version to mill**.
 

@@ -158,6 +158,23 @@ All design documents are kept as Markdown files in the repository for easy readi
     - Requires a cheap **CD4051 Multiplexer** for extra analog inputs.
     - 3.3V logic requires careful level shifting.
 
+### Chapter 4 – Professional CKS32F103 ECU (CBT6 / C8T6)
+
+- **File**: [`cks_ecu_pro.md`](./cks_ecu_pro.md)
+- **Advanced CNC Version!**
+- Focus:
+  - Using **CKS32F103CBT6** (128KB Flash) for professional applications.
+  - **Modern Features**:
+    - **Turbo Support**: PWM boost control output.
+    - **Bluetooth Interface**: Built-in HC-05 support for mobile apps (RealDash/ShadowDash).
+    - **Modern Connectors**: Compatible with Chevrolet Optra and Hyundai (Elantra/Tucson) junkyard plugs.
+    - **Cylinder Flexibility**: Supports 3 (Suzuki Alto) and 4 cylinder engines.
+  - **Pro Hardware**: Includes MAX9926 VR conditioner and LM2940 automotive power regulation.
+- **Design Automation**:
+  - **[Celus.io Design Spec](file:///Users/ebramdawood/Documents/trae_projects/Regata%20SS/cks_ecu_pro_celus.md)**: A formal specification for AI-powered hardware design.
+  - **[Detailed Connection Diagram (draw.io)](file:///Users/ebramdawood/Documents/trae_projects/Regata%20SS/cks_ecu_diagram.drawio)**: Professional vector diagram for system layout.
+  - **[Pin-to-Pin Connectivity Guide](file:///Users/ebramdawood/Documents/trae_projects/Regata%20SS/cks_ecu_pro_pins.md)**: Detailed wiring guide for AI image generators and manual building.
+
 ### Standard EFI Configuration
 
 - **File**: [`standard_efi.md`](./standard_efi.md)
